@@ -1,8 +1,10 @@
 (define-module (flat packages emacs)
   #:use-module (guix packages)
   #:use-module (guix git-download)
+  #:use-module (guix build utils)
   #:use-module (guix utils)
   #:use-module (gnu packages)
+  #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages gcc))
 
@@ -40,30 +42,54 @@
                (substitute* (find-files "." "^Makefile\\.in$")
                             (("/bin/pwd") "pwd"))
                #t))
-           ;; Add library path needed for libgccjit to work, so we can pass the
-           ;; "smoke test" in the configure script.
-           (add-before 'configure 'set-libgccjit-path
-             (lambda* (#:key inputs #:allow-other-keys)
-               (let ((libgccjit (assoc-ref inputs "libgccjit"))
-                     (version ,(package-version libgccjit)))
-                 (setenv "LIBRARY_PATH"
-                         (string-append
-                          libgccjit "/lib/gcc/" %host-type "/" version "/"
-                          ":" (getenv "LIBRARY_PATH"))))
-               #t))
            ;; Make the gzip files writable so guix can set timestamps.
            (add-before 'reset-gzip-timestamps 'make-compressed-files-writable
              (lambda _
                (for-each make-file-writable
                          (find-files %output ".*\\.t?gz$"))
                #t))
+           ;; Add build-time library paths for libgccjit.
+           (add-before 'configure 'set-libgccjit-path
+             (lambda* (#:key inputs #:allow-other-keys)
+               (let ((libgccjit-libdir
+                      (string-append (assoc-ref inputs "libgccjit")
+                                     "/lib/gcc/" %host-type "/"
+                                     ,(package-version libgccjit) "/")))
+                 (setenv "LIBRARY_PATH"
+                         (string-append libgccjit-libdir ":"
+                                        (getenv "LIBRARY_PATH"))))
+               #t))
+           ;; Add runtime library paths for libgccjit,
+           (add-after 'glib-or-gtk-wrap 'wrap-library-path
+             (lambda* (#:key inputs outputs #:allow-other-keys)
+               (let* ((glibc-libdir
+                       (string-append (assoc-ref inputs "glibc")
+                                      "/lib/"))
+                      (libgccjit-libdir
+                       (string-append (assoc-ref inputs "libgccjit")
+                                      "/lib/gcc/" %host-type "/"
+                                      ,(package-version libgccjit) "/"))
+                      (library-path (list glibc-libdir
+                                          libgccjit-libdir))
+                      (output   (assoc-ref outputs "out"))
+                      (bindir   (string-append output "/bin"))
+                      (libexec  (string-append output "/libexec"))
+                      (bin-list (append (find-files bindir ".*")
+                                        (find-files libexec ".*"))))
+                 (for-each (lambda (program)
+                             (unless (wrapper? program)
+                               (wrap-program
+                                program
+                                `("LIBRARY_PATH" prefix ,library-path))))
+                           bin-list))
+               #t))
            ;; Emacs' dumper files are incorrectly detected as executables, and
            ;; get wrapped in a launcher script.  Move the originals back.
-           (add-after 'glib-or-gtk-wrap 'restore-emacs-pdmp
+           (add-after 'wrap-library-path 'restore-emacs-pdmp
              (lambda* (#:key outputs target #:allow-other-keys)
-               (let* ((libexec (string-append (assoc-ref outputs "out")
-                                              "/libexec"))
-                      (pdmp (find-files libexec "^emacs\\.pdmp$"))
+               (let* ((output    (assoc-ref outputs "out"))
+                      (libexec   (string-append output "/libexec"))
+                      (pdmp      (find-files libexec "^emacs\\.pdmp$"))
                       (pdmp-real (find-files libexec "^\\.emacs\\.pdmp-real$")))
                  (for-each (lambda (wrapper real)
                              (delete-file wrapper)
@@ -71,5 +97,6 @@
                            pdmp pdmp-real))
                #t))))))
      (inputs
-      `(("libgccjit" ,libgccjit)
+      `(("glibc" ,glibc)
+        ("libgccjit" ,libgccjit)
         ,@(package-inputs emacs-next))))))
