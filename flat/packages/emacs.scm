@@ -12,7 +12,7 @@
 ;; built-in emacs recipes, in an attempt to produce a "vanilla" emacs suitable
 ;; for shipping with "guix pack".
 (define-public emacs-native-comp
-  (let ((commit "92cf4bb8cc3da81f4877a734b9e9089ac4b89e85")
+  (let ((commit "92dc81f85e1b91db04487ccf1b52c0cd3328dfee")
         (revision "0")
         (emacs-version "28.0.50"))
     (package
@@ -26,7 +26,7 @@
              (url "https://git.savannah.gnu.org/git/emacs.git")
              (commit commit)))
        (sha256
-        (base32 "02l19bnqq5c8qbd6ijcqpjdbafc9mjgcz6ax19inlyvd0v0r6sa9"))
+        (base32 "1f22bxwq53hhdjlakmqz66y63vix5ybpnc1pk9fpy18wjh871scq"))
        (file-name (git-file-name name version))
        (patches (search-patches "emacs27-exec-path.patch"
                                 "emacs-source-date-epoch.patch"))))
@@ -62,14 +62,18 @@
            ;; Add runtime library paths for libgccjit,
            (add-after 'glib-or-gtk-wrap 'wrap-library-path
              (lambda* (#:key inputs outputs #:allow-other-keys)
-               (let* ((glibc-libdir
+               (let* ((gcc-libdir
+                       (string-append (assoc-ref inputs "gcc")
+                                      "/lib/"))
+                      (glibc-libdir
                        (string-append (assoc-ref inputs "glibc")
                                       "/lib/"))
                       (libgccjit-libdir
                        (string-append (assoc-ref inputs "libgccjit")
                                       "/lib/gcc/" %host-type "/"
                                       ,(package-version libgccjit) "/"))
-                      (library-path (list glibc-libdir
+                      (library-path (list gcc-libdir
+                                          glibc-libdir
                                           libgccjit-libdir))
                       (output   (assoc-ref outputs "out"))
                       (bindir   (string-append output "/bin"))
@@ -97,6 +101,7 @@
                            pdmp pdmp-real))
                #t))))))
      (inputs
-      `(("glibc" ,glibc)
+      `(("gcc" ,gcc)
+        ("glibc" ,glibc)
         ("libgccjit" ,libgccjit)
         ,@(package-inputs emacs-next))))))
