@@ -63,7 +63,7 @@
            (add-after 'glib-or-gtk-wrap 'wrap-library-path
              (lambda* (#:key inputs outputs #:allow-other-keys)
                (let* ((gcc-libdir
-                       (string-append (assoc-ref inputs "gcc")
+                       (string-append (assoc-ref inputs "gcc:lib")
                                       "/lib/"))
                       (glibc-libdir
                        (string-append (assoc-ref inputs "glibc")
@@ -101,7 +101,7 @@
                            pdmp pdmp-real))
                #t))))))
      (inputs
-      `(("gcc" ,gcc)
+      `(("gcc:lib" ,gcc "lib")
         ("glibc" ,glibc)
         ("libgccjit" ,libgccjit)
         ,@(package-inputs emacs-next))))))
