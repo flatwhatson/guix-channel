@@ -27,7 +27,7 @@
   #:use-module (gnu packages gcc))
 
 (define-public emacs-native-comp
-  (let ((commit "3fa73fa0fb1caedd10553d9f3185635c039319fd")
+  (let ((commit "2e25eebfbd25b131b6d0fcff4e60f7a8773d912b")
         (revision "0")
         (emacs-version "28.0.50"))
     (package
@@ -41,7 +41,7 @@
              (url "https://git.savannah.gnu.org/git/emacs.git")
              (commit commit)))
        (sha256
-        (base32 "17fcj8y7g4z5m0vh8v0d45zlzaqs2kzf58m5kv9nzrx6y7z7gc7q"))
+        (base32 "1k9prfcq4a0iw327f1438kq82a4fxc0m1i04j7c7g1zdc4n1mmky"))
        (file-name (git-file-name name version))
        (patches (origin-patches (package-source emacs-next)))
        (modules (origin-modules (package-source emacs-next)))
