@@ -26,10 +26,40 @@
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages gcc))
 
+(define-public libgccjit-10
+  (package
+    (inherit gcc-10)
+    (name "libgccjit")
+    (outputs (delete "lib" (package-outputs gcc)))
+    (properties (alist-delete 'hidden? (package-properties gcc)))
+    (arguments
+     (substitute-keyword-arguments `(#:modules ((guix build gnu-build-system)
+                                                (guix build utils)
+                                                (ice-9 regex)
+                                                (srfi srfi-1)
+                                                (srfi srfi-26))
+                                     ,@(package-arguments gcc))
+       ((#:configure-flags flags)
+        `(append `("--enable-host-shared"
+                   ,(string-append "--enable-languages=jit"))
+                 (remove (cut string-match "--enable-languages.*" <>)
+                         ,flags)))
+       ((#:phases phases)
+        `(modify-phases ,phases
+           (add-after 'install 'remove-broken-or-conflicting-files
+             (lambda* (#:key outputs #:allow-other-keys)
+               (for-each delete-file
+                         (find-files (string-append (assoc-ref outputs "out") "/bin")
+                                     ".*(c\\+\\+|cpp|g\\+\\+|gcov|gcc|gcc-.*)"))
+               #t))))))))
+
 (define-public emacs-native-comp
   (let ((commit "2e25eebfbd25b131b6d0fcff4e60f7a8773d912b")
+        (checksum "1k9prfcq4a0iw327f1438kq82a4fxc0m1i04j7c7g1zdc4n1mmky")
         (revision "0")
-        (emacs-version "28.0.50"))
+        (emacs-version "28.0.50")
+        (gcc gcc-10)
+        (libgccjit libgccjit-10))
     (package
      (inherit emacs-next)
      (name "emacs-native-comp")
@@ -40,8 +70,7 @@
        (uri (git-reference
              (url "https://git.savannah.gnu.org/git/emacs.git")
              (commit commit)))
-       (sha256
-        (base32 "1k9prfcq4a0iw327f1438kq82a4fxc0m1i04j7c7g1zdc4n1mmky"))
+       (sha256 (base32 checksum))
        (file-name (git-file-name name version))
        (patches (origin-patches (package-source emacs-next)))
        (modules (origin-modules (package-source emacs-next)))
@@ -91,6 +120,9 @@
                                 `("LIBRARY_PATH" prefix ,library-path))))
                            bin-list))
                #t))))))
+     (native-inputs
+      `(("gcc" ,gcc)
+        ,@(package-native-inputs emacs-next)))
      (inputs
       `(("gcc:lib" ,gcc "lib")
         ("glibc" ,glibc)
