@@ -54,8 +54,8 @@
                #t))))))))
 
 (define-public emacs-native-comp
-  (let ((commit "9f6c12be5574060014f91ad6190d79124ea19802")
-        (checksum "0is6v1vllgyl1xdg7d7mjghi6007zh1ciaw38xja21a6750pncg0")
+  (let ((commit "b619339b7a6c7952508bff72f07fc98c04e85f2c")
+        (checksum "0dcw8xvgncgbbq49ik45pnlqf03xggc7prh23v1ma5zy39c5rkzz")
         (revision "0")
         (emacs-version "28.0.50")
         (gcc gcc-10)
