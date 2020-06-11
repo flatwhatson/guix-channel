@@ -19,39 +19,12 @@
 (define-module (flat packages emacs)
   #:use-module (guix packages)
   #:use-module (guix git-download)
-  #:use-module (guix build utils)
   #:use-module (guix utils)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
-  #:use-module (gnu packages gcc))
-
-(define-public libgccjit-10
-  (package
-    (inherit gcc-10)
-    (name "libgccjit")
-    (outputs (delete "lib" (package-outputs gcc)))
-    (properties (alist-delete 'hidden? (package-properties gcc)))
-    (arguments
-     (substitute-keyword-arguments `(#:modules ((guix build gnu-build-system)
-                                                (guix build utils)
-                                                (ice-9 regex)
-                                                (srfi srfi-1)
-                                                (srfi srfi-26))
-                                     ,@(package-arguments gcc))
-       ((#:configure-flags flags)
-        `(append `("--enable-host-shared"
-                   ,(string-append "--enable-languages=jit"))
-                 (remove (cut string-match "--enable-languages.*" <>)
-                         ,flags)))
-       ((#:phases phases)
-        `(modify-phases ,phases
-           (add-after 'install 'remove-broken-or-conflicting-files
-             (lambda* (#:key outputs #:allow-other-keys)
-               (for-each delete-file
-                         (find-files (string-append (assoc-ref outputs "out") "/bin")
-                                     ".*(c\\+\\+|cpp|g\\+\\+|gcov|gcc|gcc-.*)"))
-               #t))))))))
+  #:use-module (gnu packages gcc)
+  #:use-module (flat packages gcc))
 
 (define-public emacs-native-comp
   (let ((commit "dd939d7484adad7735e66b1759283d00df708e70")
