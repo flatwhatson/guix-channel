@@ -27,8 +27,8 @@
   #:use-module (flat packages gcc))
 
 (define-public emacs-native-comp
-  (let ((commit "dd939d7484adad7735e66b1759283d00df708e70")
-        (checksum "1x1imyixdgvq8hch89wvmlzgnxl3x7i6n3nvk5b3yjrp6b762bz7")
+  (let ((commit "a6cc16d04ca98bcf38c7ebf4d0c5bf68b6b37369")
+        (checksum "0c15nbx0hwg1fd39sn3xf5b0w58vqrfnal6vwwv4clzsj97fpqxh")
         (revision "0")
         (emacs-version "28.0.50")
         (gcc gcc-10)
