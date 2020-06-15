@@ -26,7 +26,7 @@
 (define-public emacs-flycheck-guile
   (package
     (name "emacs-flycheck-guile")
-    (version "0.1")
+    (version "0.1.1")
     (source
      (origin
        (method git-fetch)
@@ -36,7 +36,7 @@
          (commit version)))
        (file-name (git-file-name name version))
        (sha256
-        (base32 "1fi6scbfid4pfg0v2zalgwisz8m9hpypl8ssnn0dbyw7lprbld43"))))
+        (base32 "163pnsh6r6bral1jg0vqri54g6hygws21vis0zci4114yb3fhkm1"))))
     (propagated-inputs
      `(("emacs-flycheck" ,emacs-flycheck)
        ("emacs-geiser" ,emacs-geiser)))
