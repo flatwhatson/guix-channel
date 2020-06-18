@@ -24,6 +24,8 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages gcc)
+  #:use-module (gnu packages webkit)
+  #:use-module (gnu packages xorg)
   #:use-module (flat packages gcc))
 
 (define-public emacs-native-comp
@@ -51,7 +53,9 @@
      (arguments
       (substitute-keyword-arguments (package-arguments emacs-next)
        ((#:configure-flags flags)
-        `(cons* "--with-nativecomp" ,flags))
+        `(cons* "--with-nativecomp"
+                "--with-xwidgets"
+                ,flags))
        ((#:phases phases)
         `(modify-phases ,phases
            ;; Add build-time library paths for libgccjit.
@@ -100,6 +104,8 @@
       `(("gcc:lib" ,gcc "lib")
         ("glibc" ,glibc)
         ("libgccjit" ,libgccjit)
+        ("libxcomposite" ,libxcomposite)
+        ("webkitgtk" ,webkitgtk)
         ,@(package-inputs emacs-next)))
      (native-search-paths
       (list (search-path-specification
