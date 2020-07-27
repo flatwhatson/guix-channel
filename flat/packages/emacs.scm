@@ -104,8 +104,8 @@
          ,@(package-inputs emacs))))))
 
 (define-public emacs-native-comp
-  (let* ((commit "37e0dbc97242a69da9f02039f5635261a307659a")
-         (checksum "0952m9nmxscrp2q4819w4cs36lzpkmdx97a75d831z0wal6ppv1d")
+  (let* ((commit "7a161dc688f0eeee64e307a55efbc7d11bab3627")
+         (checksum "0vz2g9lpfr63f6dhkxyx1nps0gjw7ciiq53z83jzj8357whp3ldv")
          (revision "0")
          (emacs-version "28.0.50")
          (emacs (emacs-with-native-comp emacs-next gcc-10)))
