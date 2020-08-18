@@ -51,7 +51,7 @@
                              (string-append libgccjit-libdir ":"
                                             (getenv "LIBRARY_PATH"))))
                    #t))
-               ;; Add runtime library paths for libgccjit,
+               ;; Add runtime library paths for libgccjit.
                (add-before 'restore-emacs-pdmp 'wrap-library-path
                  (lambda* (#:key inputs outputs #:allow-other-keys)
                    (let* ((gcc-libdir
@@ -78,7 +78,21 @@
                                        program
                                      `("LIBRARY_PATH" prefix ,library-path))))
                                bin-list))
-                   #t))))))
+                   #t))
+               ;; Remove wrappers around .eln files in libexec.
+               (add-after 'restore-emacs-pdmp 'unwrap-eln-files
+                 (lambda* (#:key inputs outputs #:allow-other-keys)
+                   (let* ((output   (assoc-ref outputs "out"))
+                          (libexec  (string-append output "/libexec"))
+                          (eln-list (find-files libexec "\\.eln$")))
+                     (for-each (lambda (wrapper)
+                                 (let ((real (string-append
+                                              (dirname wrapper) "/."
+                                              (basename wrapper) "-real")))
+                                   (delete-file wrapper)
+                                   (rename-file real wrapper)))
+                               eln-list)
+                     #t)))))))
         (native-inputs
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
@@ -104,8 +118,8 @@
          ,@(package-inputs emacs))))))
 
 (define-public emacs-native-comp
-  (let* ((commit "3882e8fd244a66edb6ba60f40182a4d0772cfcb1")
-         (checksum "1743xsjzbaclj30b4rd42pnyyi3siv05rcmbkbc3qyghcznrsfcg")
+  (let* ((commit "76faab27cf4055f6ac37b9b05c98bc03939afb7e")
+         (checksum "0l3218lzla6h1vcjy6rf03hvv2488ig4dsr9pqfyw6a7if876rdx")
          (revision "0")
          (emacs-version "28.0.50")
          (emacs (emacs-with-native-comp emacs-next gcc-10)))
