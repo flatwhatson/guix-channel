@@ -118,8 +118,8 @@
          ,@(package-inputs emacs))))))
 
 (define-public emacs-native-comp
-  (let* ((commit "76faab27cf4055f6ac37b9b05c98bc03939afb7e")
-         (checksum "0l3218lzla6h1vcjy6rf03hvv2488ig4dsr9pqfyw6a7if876rdx")
+  (let* ((commit "fc9b68636b1aec69295726d2b3be2b520911f40b")
+         (checksum "13d0y7k17xz74v8sl2fyljqaiqaj7ffw3jakj2wcv4ndxnkd0k35")
          (revision "0")
          (emacs-version "28.0.50")
          (emacs (emacs-with-native-comp emacs-next gcc-10)))
