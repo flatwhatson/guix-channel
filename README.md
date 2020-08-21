@@ -12,6 +12,15 @@ support for native compilation of Elisp.
 
 See [GccEmacs][gccemacs] for more information.
 
+### emacs-pgtk-native-comp
+
+Emacs built from the unofficial `pgtk-nativecomp` branch, which combines a
+pure GTK3 rendering engine with the experimental native compilation feature.
+
+See [masm11's branch][masm11-pgtk] for more information on pgtk.
+
+See [fejfighter's branch][fejfighter-pgtk] for the pgtk+nativecomp merge.
+
 ### libgccjit-10
 
 An updated `libgccjit` package based on `gcc-10`.  The `libgccjit` package in
@@ -47,3 +56,5 @@ See [COPYING](COPYING) for details.
 [guix]: https://guix.gnu.org/
 [guix-channel]: https://guix.gnu.org/manual/en/html_node/Channels.html
 [gccemacs]: https://www.emacswiki.org/emacs/GccEmacs
+[masm11-pgtk]: https://github.com/masm11/emacs/tree/pgtk
+[fejfighter-pgtk]: https://github.com/fejfighter/emacs/tree/pgtk-nativecomp
