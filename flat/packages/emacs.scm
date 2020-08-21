@@ -117,21 +117,26 @@
          ("webkitgtk" ,webkitgtk)
          ,@(package-inputs emacs))))))
 
-(define-public emacs-native-comp
-  (let* ((commit "c818c29771d3cb51875643b2f6c894073e429dd2")
-         (checksum "1mg2ln8zhbpqjfpaz95wdgbl7j9r34acsw9hn05qvgsg425g1370")
-         (revision "0")
-         (emacs-version "28.0.50")
-         (emacs (emacs-with-native-comp emacs-next gcc-10)))
+(define emacs-with-pgtk
+  (mlambda (emacs)
     (package
       (inherit emacs)
-      (name "emacs-native-comp")
-      (version (git-version emacs-version revision commit))
+      (arguments
+       (substitute-keyword-arguments (package-arguments emacs)
+         ((#:configure-flags flags)
+          `(cons* "--with-pgtk" ,flags)))))))
+
+(define emacs-from-git
+  (lambda* (emacs #:key name repository commit checksum version revision)
+    (package
+      (inherit emacs)
+      (name name)
+      (version (git-version version revision commit))
       (source
        (origin
          (method git-fetch)
          (uri (git-reference
-               (url "https://git.savannah.gnu.org/git/emacs.git")
+               (url repository)
                (commit commit)))
          (sha256 (base32 checksum))
          (file-name (git-file-name name version))
@@ -143,7 +148,28 @@
               (variable "EMACSLOADPATH")
               (files
                (list "share/emacs/site-lisp"
-                     (string-append "share/emacs/" emacs-version "/lisp"))))
+                     (string-append "share/emacs/" version "/lisp"))))
              (search-path-specification
               (variable "INFOPATH")
               (files '("share/info"))))))))
+
+(define-public emacs-native-comp
+  (emacs-from-git
+   (emacs-with-native-comp emacs-next gcc-10)
+   #:name "emacs-native-comp"
+   #:repository "https://git.savannah.gnu.org/git/emacs.git"
+   #:commit "c818c29771d3cb51875643b2f6c894073e429dd2"
+   #:checksum "1mg2ln8zhbpqjfpaz95wdgbl7j9r34acsw9hn05qvgsg425g1370"
+   #:version "28.0.50"
+   #:revision "0"))
+
+(define-public emacs-pgtk-native-comp
+  (emacs-from-git
+   (emacs-with-pgtk
+    (emacs-with-native-comp emacs-next gcc-10))
+   #:name "emacs-pgtk-native-comp"
+   #:repository "https://github.com/fejfighter/emacs.git"
+   #:commit "b7adb08f960fe6568f702b8f328e65e3833ffc13"
+   #:checksum "0p852k5wf8sy9h7x2z6iivf9xnhpy85vly9fn0a1qj2japrhvyr2"
+   #:version "28.0.50"
+   #:revision "0"))
