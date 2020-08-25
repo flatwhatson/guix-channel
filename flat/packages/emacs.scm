@@ -25,6 +25,7 @@
   #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages gcc)
+  #:use-module (gnu packages gnome)
   #:use-module (gnu packages webkit)
   #:use-module (gnu packages xorg)
   #:use-module (flat packages gcc))
@@ -113,7 +114,7 @@
          ((#:configure-flags flags)
           `(cons* "--with-xwidgets" ,flags))))
       (inputs
-       `(("libxcomposite" ,libxcomposite)
+       `(("glib-networking" ,glib-networking)
          ("webkitgtk" ,webkitgtk)
          ,@(package-inputs emacs))))))
 
@@ -172,5 +173,5 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "2be87bcbbe5cbbe23df94647bf4d09c5d52e94c1"
-   #:checksum "0i3hh8gr35fqnnzn29kb37n0wal4fm53ky5b9n3ahhpx7cnq9h7z"))
+   #:git-commit "9efb4b7ea2976365cb9ef6d40affeb2650683e21"
+   #:checksum "194n5yhx5kqdlmcp21mx92vxijxcbkkrmrlvqbcnswq4vr1axank"))
