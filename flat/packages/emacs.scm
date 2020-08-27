@@ -104,8 +104,6 @@
            ,@(package-inputs emacs)))))))
 
 (define emacs-with-xwidgets
-  ;; FIXME xwidgets-webkit is missing TLS/SSL support
-  ;; FIXME memory leak? needs more testing
   (mlambda (emacs)
     (package
       (inherit emacs)
