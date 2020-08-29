@@ -21,6 +21,7 @@
   #:use-module (guix memoization)
   #:use-module (guix git-download)
   #:use-module (guix utils)
+  #:use-module (guix build utils)
   #:use-module (gnu packages)
   #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
@@ -53,27 +54,16 @@
                                             (getenv "LIBRARY_PATH"))))
                    #t))
                ;; Add runtime library paths for libgccjit.
-               (add-before 'restore-emacs-pdmp 'wrap-library-path
-                 (lambda* (#:key inputs outputs #:allow-other-keys)
-                   (let* ((library-path
-                           (list (string-append (assoc-ref inputs "glibc")
-                                                "/lib/")
-                                 (string-append (assoc-ref inputs "libgccjit")
-                                                "/lib/")
-                                 (string-append (assoc-ref inputs "libgccjit")
-                                                "/lib/gcc/" %host-type "/"
-                                                ,(package-version libgccjit) "/")))
-                          (output   (assoc-ref outputs "out"))
-                          (bindir   (string-append output "/bin"))
-                          (libexec  (string-append output "/libexec"))
-                          (bin-list (append (find-files bindir ".*")
-                                            (find-files libexec ".*"))))
-                     (for-each (lambda (program)
-                                 (unless (wrapper? program)
-                                   (wrap-program
-                                       program
-                                     `("LIBRARY_PATH" prefix ,library-path))))
-                               bin-list))
+               (add-after 'unpack 'patch-driver-options
+                 (lambda* (#:key inputs #:allow-other-keys)
+                   (substitute* "lisp/emacs-lisp/comp.el"
+                     (("\\(defcustom comp-native-driver-options nil")
+                      (format
+                       #f "(defcustom comp-native-driver-options '(~s ~s)"
+                       (string-append
+                        "-B" (assoc-ref inputs "glibc") "/lib/")
+                       (string-append
+                        "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
                    #t))
                ;; Remove wrappers around .eln files in libexec.
                (add-after 'restore-emacs-pdmp 'unwrap-eln-files
