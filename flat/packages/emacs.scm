@@ -23,6 +23,7 @@
   #:use-module (guix utils)
   #:use-module (guix build utils)
   #:use-module (gnu packages)
+  #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
   #:use-module (gnu packages gcc)
@@ -30,6 +31,11 @@
   #:use-module (gnu packages webkit)
   #:use-module (gnu packages xorg)
   #:use-module (flat packages gcc))
+
+(define emacs-next
+  (if (defined? 'emacs-next)
+      emacs-next
+      emacs))
 
 (define emacs-with-native-comp
   (mlambda (emacs gcc)
@@ -126,6 +132,9 @@
          (patches (origin-patches (package-source emacs)))
          (modules (origin-modules (package-source emacs)))
          (snippet (origin-snippet (package-source emacs)))))
+      (native-inputs
+       `(("autoconf" ,autoconf)
+         ,@(package-native-inputs emacs)))
       (native-search-paths
        (list (search-path-specification
               (variable "EMACSLOADPATH")
