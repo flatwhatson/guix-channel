@@ -55,19 +55,14 @@
                ;; Add runtime library paths for libgccjit.
                (add-before 'restore-emacs-pdmp 'wrap-library-path
                  (lambda* (#:key inputs outputs #:allow-other-keys)
-                   (let* ((gcc-libdir
-                           (string-append (assoc-ref inputs "gcc:lib")
-                                          "/lib/"))
-                          (glibc-libdir
-                           (string-append (assoc-ref inputs "glibc")
-                                          "/lib/"))
-                          (libgccjit-libdir
-                           (string-append (assoc-ref inputs "libgccjit")
-                                          "/lib/gcc/" %host-type "/"
-                                          ,(package-version libgccjit) "/"))
-                          (library-path (list gcc-libdir
-                                              glibc-libdir
-                                              libgccjit-libdir))
+                   (let* ((library-path
+                           (list (string-append (assoc-ref inputs "glibc")
+                                                "/lib/")
+                                 (string-append (assoc-ref inputs "libgccjit")
+                                                "/lib/")
+                                 (string-append (assoc-ref inputs "libgccjit")
+                                                "/lib/gcc/" %host-type "/"
+                                                ,(package-version libgccjit) "/")))
                           (output   (assoc-ref outputs "out"))
                           (bindir   (string-append output "/bin"))
                           (libexec  (string-append output "/libexec"))
@@ -98,8 +93,7 @@
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
         (inputs
-         `(("gcc:lib" ,gcc "lib")
-           ("glibc" ,glibc)
+         `(("glibc" ,glibc)
            ("libgccjit" ,libgccjit)
            ,@(package-inputs emacs)))))))
 
