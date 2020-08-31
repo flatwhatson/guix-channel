@@ -32,11 +32,6 @@
   #:use-module (gnu packages xorg)
   #:use-module (flat packages gcc))
 
-(define emacs-next
-  (if (defined? 'emacs-next)
-      emacs-next
-      emacs))
-
 (define emacs-with-native-comp
   (mlambda (emacs gcc)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
@@ -132,6 +127,17 @@
          (patches (origin-patches (package-source emacs)))
          (modules (origin-modules (package-source emacs)))
          (snippet (origin-snippet (package-source emacs)))))
+      (arguments
+       (substitute-keyword-arguments (package-arguments emacs)
+         ((#:phases phases)
+          `(modify-phases ,phases
+             ;; Fix strip-double-wrap referencing the wrong version.
+             (replace 'strip-double-wrap
+               (lambda* (#:key outputs #:allow-other-keys)
+                 (with-directory-excursion (assoc-ref outputs "out")
+                   (copy-file (string-append "bin/emacs-" ,pkg-version)
+                              "bin/emacs")
+                   #t)))))))
       (native-inputs
        `(("autoconf" ,autoconf)
          ,@(package-native-inputs emacs)))
@@ -147,7 +153,7 @@
 
 (define-public emacs-native-comp
   (emacs-from-git
-   (emacs-with-native-comp emacs-next gcc-10)
+   (emacs-with-native-comp emacs gcc-10)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
@@ -159,7 +165,7 @@
   (emacs-from-git
    (emacs-with-pgtk
     (emacs-with-xwidgets
-     (emacs-with-native-comp emacs-next gcc-10)))
+     (emacs-with-native-comp emacs gcc-10)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
