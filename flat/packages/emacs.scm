@@ -66,7 +66,8 @@
                        (string-append
                         "-B" (assoc-ref inputs "libgccjit") "/lib/")
                        (string-append
-                        "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
+                        "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"
+                        %host-type "/" ,(package-version libgccjit) "/"))))
                    #t))
                ;; Remove wrappers around .eln files in libexec.
                (add-after 'restore-emacs-pdmp 'unwrap-eln-files
