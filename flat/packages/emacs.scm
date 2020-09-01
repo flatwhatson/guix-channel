@@ -64,6 +64,8 @@
                        (string-append
                         "-B" (assoc-ref inputs "glibc") "/lib/")
                        (string-append
+                        "-B" (assoc-ref inputs "libgccjit") "/lib/")
+                       (string-append
                         "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
                    #t))
                ;; Remove wrappers around .eln files in libexec.
