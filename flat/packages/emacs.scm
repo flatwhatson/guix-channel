@@ -60,7 +60,7 @@
                    (substitute* "lisp/emacs-lisp/comp.el"
                      (("\\(defcustom comp-native-driver-options nil")
                       (format
-                       #f "(defcustom comp-native-driver-options '(~s ~s)"
+                       #f "(defcustom comp-native-driver-options '(~s ~s ~s)"
                        (string-append
                         "-B" (assoc-ref inputs "glibc") "/lib/")
                        (string-append
