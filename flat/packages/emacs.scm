@@ -140,6 +140,9 @@
                    (copy-file (string-append "bin/emacs-" ,pkg-version)
                               "bin/emacs")
                    #t)))))))
+      (inputs
+       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
+         ,@(package-inputs emacs)))
       (native-inputs
        `(("autoconf" ,autoconf)
          ,@(package-native-inputs emacs)))
