@@ -143,9 +143,6 @@
       (inputs
        `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
          ,@(package-inputs emacs)))
-      (native-inputs
-       `(("autoconf" ,autoconf)
-         ,@(package-native-inputs emacs)))
       (native-search-paths
        (list (search-path-specification
               (variable "EMACSLOADPATH")
@@ -158,22 +155,22 @@
 
 (define-public emacs-native-comp
   (emacs-from-git
-   (emacs-with-native-comp emacs gcc-10)
+   (emacs-with-native-comp emacs-next gcc-10)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "3023eb569213a3dd5183640f6e322acd00ea536a"
-   #:checksum "07xcck91sz5lcv9cc2qk94g6krgvvm800pbsav1j1f2k1cjz4hzv"))
+   #:git-commit "67c53691560616598f746491347bd223480e6172"
+   #:checksum "1bay4729z3klmlf9nmhrg0d0n6mkmdla0fwkv2c5kxd12f5pq67h"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
    (emacs-with-pgtk
     (emacs-with-xwidgets
-     (emacs-with-native-comp emacs gcc-10)))
+     (emacs-with-native-comp emacs-next gcc-10)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "717c8fe9a1f3d931f6ec0618493af14c0eafbfe2"
-   #:checksum "1hgbwnlwxh7ma61gp9d0cqhd96g4mj8rmxqvpq109jd7s09l8wkb"))
+   #:git-commit "756abf4bc0f0eb1443f9ce46f810efe18edb9334"
+   #:checksum "1q52lgrk0pm3254q7xbvk2m13mvx2sspm8b0kbsw4qddaxpjwb2a"))
