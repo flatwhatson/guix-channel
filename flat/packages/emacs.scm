@@ -39,6 +39,8 @@
         (inherit emacs)
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
+           ((#:make-flags flags ''())
+            `(cons* "NATIVE_FULL_AOT=1" ,flags))
            ((#:configure-flags flags)
             `(cons* "--with-nativecomp" ,flags))
            ((#:phases phases)
