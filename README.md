@@ -31,12 +31,7 @@ merging master unless the `feature/native-comp` upstream has done so.
 Emacs built from a WORK-IN-PROGRESS version of pgtk+nativecomp. This includes
 fixes from relevant PRs that haven't been merged upstream yet.
 
-Currently this is `emacs-pgtk-native-comp` plus the [childframe
-reimplementation][masm11-childframe-pr] which fixes some childframe bugs on
-X11.
-
-This package builds from [my pgtk-nativecomp-dev
-branch][flatwhatson-pgtk-dev], which makes no promises about stable commits.
+Currently this is equivalent to `emacs-pgtk-native-comp`.
 
 ### libgccjit-10
 
