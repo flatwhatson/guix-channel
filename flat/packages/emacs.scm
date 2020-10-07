@@ -22,7 +22,6 @@
   #:use-module (guix git-download)
   #:use-module (guix utils)
   #:use-module (guix build utils)
-  #:use-module (gnu packages)
   #:use-module (gnu packages autotools)
   #:use-module (gnu packages base)
   #:use-module (gnu packages emacs)
@@ -30,13 +29,24 @@
   #:use-module (gnu packages gnome)
   #:use-module (gnu packages webkit)
   #:use-module (gnu packages xorg)
-  #:use-module (flat packages gcc))
+  #:use-module (flat packages)
+  #:use-module (flat packages gcc)
+  #:use-module (ice-9 regex)
+  #:use-module (srfi srfi-26))
 
 (define emacs-with-native-comp
   (mlambda (emacs gcc)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
       (package
         (inherit emacs)
+        (source
+         (origin
+           (inherit (package-source emacs))
+           (patches
+            (append (search-patches "emacs-native-comp-exec-path.patch")
+                    (filter
+                     (negate (cut string-match "/emacs-exec-path.patch$" <>))
+                     (origin-patches (package-source emacs)))))))
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
            ((#:make-flags flags ''())
@@ -122,15 +132,13 @@
       (version (git-version pkg-version pkg-revision git-commit))
       (source
        (origin
+         (inherit (package-source emacs))
          (method git-fetch)
          (uri (git-reference
                (url git-repo)
                (commit git-commit)))
          (sha256 (base32 checksum))
-         (file-name (git-file-name pkg-name pkg-version))
-         (patches (origin-patches (package-source emacs)))
-         (modules (origin-modules (package-source emacs)))
-         (snippet (origin-snippet (package-source emacs)))))
+         (file-name (git-file-name pkg-name pkg-version))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs)
          ((#:phases phases)
@@ -162,8 +170,8 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "323200044f0c3f716f8f78a6f5e39349fe039117"
-   #:checksum "08kxl0lfd32brq0r0i6v6wg7wrcr9yd9akijxq4ikrh1bl7cja0b"))
+   #:git-commit "4a1bb4626053d5be5d3e869d6b7049dc3269d812"
+   #:checksum "1wf1j1dq5dm62cwsfxf7jxjinh8lz3jgydhlvmkgzsrp2rjwijlp"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
@@ -174,8 +182,8 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "05e9f5450ad4e9d434beaeffa617bfce624fa61f"
-   #:checksum "0r9ywg5f49ib3j1lsdzlg8bqqxmivaic0z78hdv51y2dnqwvqa5l"))
+   #:git-commit "b0779ed7cd96289366cbd220b5068a667f62c002"
+   #:checksum "04f5gnpdqrg6rgiqyzdxvxpf1hqy5jyc94n2k0hfabxvfa3rhwgn"))
 
 (define-public emacs-pgtk-native-comp-dev
   (emacs-from-git
@@ -186,5 +194,5 @@
    #:pkg-version "28.0.50"
    #:pkg-revision "0"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "05e9f5450ad4e9d434beaeffa617bfce624fa61f"
-   #:checksum "0r9ywg5f49ib3j1lsdzlg8bqqxmivaic0z78hdv51y2dnqwvqa5l"))
+   #:git-commit "b0779ed7cd96289366cbd220b5068a667f62c002"
+   #:checksum "04f5gnpdqrg6rgiqyzdxvxpf1hqy5jyc94n2k0hfabxvfa3rhwgn"))
