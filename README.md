@@ -26,13 +26,6 @@ This package builds from [my pgtk-nativecomp branch][flatwhatson-pgtk], which
 keeps stable commit references by merging instead of rebasing and avoids
 merging master unless the `feature/native-comp` upstream has done so.
 
-### emacs-pgtk-native-comp-dev
-
-Emacs built from a WORK-IN-PROGRESS version of pgtk+nativecomp. This includes
-fixes from relevant PRs that haven't been merged upstream yet.
-
-Currently this is equivalent to `emacs-pgtk-native-comp`.
-
 ### libgccjit-10
 
 An updated `libgccjit` package based on `gcc-10`.  The `libgccjit` package in
@@ -69,7 +62,5 @@ See [COPYING](COPYING) for details.
 [guix-channel]: https://guix.gnu.org/manual/en/html_node/Channels.html
 [gccemacs]: https://www.emacswiki.org/emacs/GccEmacs
 [masm11-pgtk]: https://github.com/masm11/emacs/tree/pgtk
-[masm11-childframe-pr]: https://github.com/masm11/emacs/pull/51
 [fejfighter-pgtk]: https://github.com/fejfighter/emacs/tree/pgtk-nativecomp
 [flatwhatson-pgtk]: https://github.com/flatwhatson/emacs/tree/pgtk-nativecomp
-[flatwhatson-pgtk-dev]: https://github.com/flatwhatson/emacs/tree/pgtk-nativecomp-dev

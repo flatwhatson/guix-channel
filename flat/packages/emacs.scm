@@ -184,15 +184,3 @@
    #:git-repo "https://github.com/flatwhatson/emacs.git"
    #:git-commit "7cdee3ce346e535d72e853aded974a730e974108"
    #:checksum "0qarfkachqqspb7knsd8mgg8bq19k4q0ws73w3wpph22vhi0llyp"))
-
-(define-public emacs-pgtk-native-comp-dev
-  (emacs-from-git
-   (emacs-with-pgtk
-    (emacs-with-xwidgets
-     (emacs-with-native-comp emacs-next gcc-10)))
-   #:pkg-name "emacs-pgtk-native-comp-dev"
-   #:pkg-version "28.0.50"
-   #:pkg-revision "0"
-   #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "7cdee3ce346e535d72e853aded974a730e974108"
-   #:checksum "0qarfkachqqspb7knsd8mgg8bq19k4q0ws73w3wpph22vhi0llyp"))
