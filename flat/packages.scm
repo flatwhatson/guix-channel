@@ -20,6 +20,7 @@
   #:use-module ((gnu packages) #:prefix gnu:)
   #:use-module (guix diagnostics)
   #:use-module (guix i18n)
+  #:use-module (srfi srfi-1)
   #:export (search-patch
             search-patches
             %patch-path))
@@ -35,9 +36,13 @@
 FILE-NAME found in %PATCH-PATH."
   (list (search-patch file-name) ...))
 
+(define %channel-root
+  (find (lambda (path)
+          (file-exists? (string-append path "/flat/packages.scm")))
+        %load-path))
+
 (define %patch-path
   (make-parameter
    (append
-    (list (string-append (dirname (current-filename))
-                         "/packages/patches"))
+    (list (string-append %channel-root "/flat/packages/patches"))
     (gnu:%patch-path))))
