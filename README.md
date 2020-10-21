@@ -34,12 +34,44 @@ Guix is based on `gcc-9`, which is missing some changes that are important for
 
 ## Usage
 
-The simplest and safest way to use this channel is to clone it somewhere and
-add it to Guix's load-path when you need it:
+### via load-path
+
+The simplest way to use this channel is to temporarily add it to Guix's
+load-path:
 
 ``` shell
 git clone https://github.com/flatwhatson/guix-channel.git
 guix install -L ./guix-channel emacs-native-comp
+```
+
+### via channels.scm
+
+A more permanent solution is to configure Guix to use this channel as an
+*additional channel*.  This will extend your package collection with
+definitions from this channel.  Updates will be received (and authenticated)
+with `guix pull`.
+
+To use the channel, add it to your configuration in
+`~/.config/guix/channels.scm`:
+
+``` scheme
+(cons* (channel
+        (name 'flat)
+        (url "https://github.com/flatwhatson/guix-channel.git")
+        (introduction
+         (make-channel-introduction
+          "33f86a4b48205c0dc19d7c036c85393f0766f806"
+          (openpgp-fingerprint
+           "736A C00E 1254 378B A982  7AF6 9DBE 8265 81B6 4490"))))
+       %default-channels)
+```
+
+With the channel configured, it can be used as follows:
+
+``` shell
+guix pull
+guix search emacs-native-comp
+guix install emacs-native-comp
 ```
 
 ## License
