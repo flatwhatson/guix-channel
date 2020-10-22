@@ -19,10 +19,10 @@
 (define-module (flat packages gcc)
   #:use-module (guix packages)
   #:use-module (guix memoization)
-  #:use-module (guix build utils)
   #:use-module (guix utils)
   #:use-module (gnu packages)
-  #:use-module (gnu packages gcc))
+  #:use-module (gnu packages gcc)
+  #:use-module (srfi srfi-1))
 
 (define-public libgccjit-for-gcc
   (mlambda (gcc)
