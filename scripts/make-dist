@@ -1,0 +1,110 @@
+#!/usr/bin/env -S guile -e main -s
+!# ; -*- mode: scheme -*-
+(use-modules (ice-9 popen)
+             (ice-9 receive)
+             (ice-9 regex)
+             (ice-9 binary-ports)
+             (ice-9 textual-ports)
+             (rnrs bytevectors)
+             (srfi srfi-1))
+
+(define %project-root (dirname (dirname (current-filename))))
+
+(define %guix-args `("-L" ,%project-root))
+
+(define (guix-command cmd . args)
+  `("guix" ,cmd ,@%guix-args ,@args))
+
+(define (get-lines port)
+  (let loop ((lines '()))
+    (let ((line (get-line port)))
+      (if (eof-object? line)
+          (reverse! lines)
+          (loop (cons line lines))))))
+
+(define (run-command cmd . args)
+  (format #t "Running: ~a\n" (cons cmd args))
+  (let* ((port (apply open-pipe* OPEN_READ cmd args))
+         (lines (get-lines port)))
+    (close-port port)
+    lines))
+
+(define (run-guix-command cmd . args)
+  (apply run-command (apply guix-command cmd args)))
+
+(define (get-package-version pkg)
+  (let ((output (run-guix-command "show" pkg)))
+    (any (lambda (s)
+           (let ((m (string-match "^version: " s)))
+             (and m (match:suffix m))))
+         output)))
+
+(define (build-package pkg)
+  (let ((output (run-guix-command "build" pkg)))
+    (car output)))
+
+(define (pack-package pkg)
+  (let ((output (run-guix-command "pack" pkg
+                                  "--compression=xz"
+                                  "--relocatable"
+                                  "--relocatable"
+                                  "--symlink=/bin=bin")))
+    (car output)))
+
+(define (drain-port-to-file port file)
+  (let ((out (open-file file "wb")))
+    (let loop ()
+      (let ((data (get-bytevector-some port)))
+        (if (eof-object? data)
+            (begin
+              (close-port port)
+              (close-port out))
+            (begin
+              (put-bytevector out data)
+              (loop)))))))
+
+(define (export-package pkg file)
+  (receive (output input pids)
+      (pipeline `(,(guix-command "archive" pkg
+                                 "--export"
+                                 "--recursive")
+                  ("xz" "--threads=0")))
+    (close-port input)
+    (drain-port-to-file output file)))
+
+(define (main args)
+  (let* ((pkg "emacs-pgtk-native-comp")
+         (version (get-package-version pkg))
+         (pkg-version (string-append pkg "-" version)))
+
+    (define guix-store-path)
+    (define guix-pack-path)
+
+    (display "Building...\n")
+    (set! guix-store-path (build-package pkg))
+
+    (display "Packing...\n")
+    (set! guix-pack-path (pack-package pkg))
+
+    (let ((out-package-hash (string-append pkg-version "/package-hash.txt"))
+          (out-signing-key  (string-append pkg-version "/signing-key.pub"))
+          (out-guix-pack    (string-append pkg-version "/" pkg-version "-guix-pack.tar.xz"))
+          (out-guix-archive (string-append pkg-version "/" pkg-version "-guix-archive.nar.xz")))
+
+      (display "Creating output directory...\n")
+      (mkdir pkg-version)
+
+      (display "Writing package hash...\n")
+      (let ((out (open-output-file out-package-hash)))
+        (display guix-store-path out)
+        (display "\n" out)
+        (close-port out))
+
+      (display "Copying signing key...\n")
+      (copy-file "/etc/guix/signing-key.pub" out-signing-key)
+
+      (display "Copying tarball pack...\n")
+      (copy-file guix-pack-path out-guix-pack)
+
+      (display "Exporting package archive...\n")
+      (export-package pkg out-guix-archive))))
