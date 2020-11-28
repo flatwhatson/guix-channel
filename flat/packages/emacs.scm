@@ -72,7 +72,9 @@
                    (substitute* "lisp/emacs-lisp/comp.el"
                      (("\\(defcustom comp-native-driver-options nil")
                       (format
-                       #f "(defcustom comp-native-driver-options '(~s ~s ~s)"
+                       #f "(defcustom comp-native-driver-options '(~s ~s ~s ~s)"
+                       (string-append
+                        "-B" (assoc-ref inputs "binutils") "/bin/")
                        (string-append
                         "-B" (assoc-ref inputs "glibc") "/lib/")
                        (string-append
@@ -168,7 +170,7 @@
    (emacs-with-native-comp emacs-next gcc-10)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "87"
+   #:pkg-revision "88"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
    #:git-commit "2e0256e0a02edad129e0af1ea97b9e263c5d83fb"
    #:checksum "0baqg99qwp19yacia85jsz6qpnjf4ax0qnrrqng0nrs1yv7rlfzg"))
@@ -180,7 +182,7 @@
      (emacs-with-native-comp emacs-next gcc-10)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "102"
+   #:pkg-revision "103"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
    #:git-commit "76570a226fe7540cc7e64c330fc2b55fe072b9e9"
    #:checksum "1r6i75qq5p950bc8v44das5rpi4bzk5ijh9apqghh6fk5d0wnaxl"))
