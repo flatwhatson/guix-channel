@@ -121,6 +121,13 @@
   (mlambda (emacs)
     (package
       (inherit emacs)
+      (source
+       (origin
+         (inherit (package-source emacs))
+         (patches
+          (filter
+           (negate (cut string-match "/emacs-ignore-empty-xim-styles.patch$" <>))
+           (origin-patches (package-source emacs))))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs)
          ((#:configure-flags flags)
@@ -170,10 +177,10 @@
    (emacs-with-native-comp emacs-next gcc-10)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "105"
+   #:pkg-revision "106"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "db2a49327a48a375cc2813d5211d762c5dfe55ff"
-   #:checksum "1axn7hqb5i5r5y7bikkgh20lqzd6s4i2b66x5dwi2py79kjw82ms"))
+   #:git-commit "a3f2373bfb604af5570c86b4ffefb23296a5bfdd"
+   #:checksum "1wr69ziil3qqnnr5y5pxz32vhkd3fqj7yqpxlhb1cpi8l85sv8r0"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
@@ -182,7 +189,7 @@
      (emacs-with-native-comp emacs-next gcc-10)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "122"
+   #:pkg-revision "123"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "ea61382a3a718f0842331e9a02e6809320ee9fd4"
-   #:checksum "1f6xiqk0qr9fjy9zb07swxfvgd1a73nxbndmlq715f34j3yijl6f"))
+   #:git-commit "ebf60e8abbc457a6564ed1cefce358ea317db789"
+   #:checksum "1xbrqlmzdd98pi8g1i9fm9ly8pb6gyr2yhdcr2b860acq4y63x5v"))
