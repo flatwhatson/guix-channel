@@ -32,6 +32,7 @@
   #:use-module (flat packages)
   #:use-module (flat packages gcc)
   #:use-module (ice-9 regex)
+  #:use-module (srfi srfi-1)
   #:use-module (srfi srfi-26))
 
 (define emacs-with-native-comp
@@ -45,7 +46,10 @@
            (patches
             (append (search-patches "emacs-native-comp-exec-path.patch")
                     (filter
-                     (negate (cut string-match "/emacs-exec-path.patch$" <>))
+                     (lambda (f)
+                       (not (any (cut string-match <> f)
+                                 '("/emacs-exec-path\\.patch$"
+                                   "/emacs-ignore-empty-xim-styles\\.patch$"))))
                      (origin-patches (package-source emacs)))))))
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
@@ -121,13 +125,6 @@
   (mlambda (emacs)
     (package
       (inherit emacs)
-      (source
-       (origin
-         (inherit (package-source emacs))
-         (patches
-          (filter
-           (negate (cut string-match "/emacs-ignore-empty-xim-styles.patch$" <>))
-           (origin-patches (package-source emacs))))))
       (arguments
        (substitute-keyword-arguments (package-arguments emacs)
          ((#:configure-flags flags)
