@@ -44,8 +44,7 @@
          (origin
            (inherit (package-source emacs))
            (patches
-            (append (search-patches "emacs-native-comp-exec-path.patch"
-                                    "emacs-configure-xrender.patch")
+            (append (search-patches "emacs-native-comp-exec-path.patch")
                     (filter
                      (lambda (f)
                        (not (any (cut string-match <> f)
