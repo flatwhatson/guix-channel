@@ -53,8 +53,8 @@
                      (origin-patches (package-source emacs)))))))
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
-           ((#:make-flags flags ''())
-            `(cons* "NATIVE_FULL_AOT=1" ,flags))
+           ;((#:make-flags flags ''())
+           ; `(cons* "NATIVE_FULL_AOT=1" ,flags))
            ((#:configure-flags flags)
             `(cons* "--with-nativecomp" ,flags))
            ((#:phases phases)
@@ -174,10 +174,10 @@
    (emacs-with-native-comp emacs-next gcc-10)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "113"
+   #:pkg-revision "114"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "f1efac1f9efbfa15b6434ebef507c00c1277633f"
-   #:checksum "106wajshlvy2yq73xkvw51fvbcqagy597ykka606vlmljpn1w03c"))
+   #:git-commit "39b3bcd324c4519ae3b204a31ab1a385b8ba9574"
+   #:checksum "1562qxyfz8wwqhqdd7xjwa9s4wpypjg7nwzw6pfy1qskwkf2l7xa"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
@@ -186,7 +186,7 @@
      (emacs-with-native-comp emacs-next gcc-10)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "130"
+   #:pkg-revision "131"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "fa871e4c8271e159d0fc1fc835398ec95a48fc73"
-   #:checksum "00snxihd7qx72gxg3npays9pp9fgfqnlgna4r9srjia9rhx7vds2"))
+   #:git-commit "49fa86ded2843e7e04adbc8ce089d8c341a31793"
+   #:checksum "1fbsg0zs357kmad3adhsc7f4ml34bm77q3bcnpbg4nnylj2nl75j"))
