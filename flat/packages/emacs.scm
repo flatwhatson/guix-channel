@@ -36,7 +36,7 @@
   #:use-module (srfi srfi-26))
 
 (define emacs-with-native-comp
-  (mlambda (emacs gcc)
+  (lambda* (emacs gcc #:optional full-aot)
     (let ((libgccjit (libgccjit-for-gcc gcc)))
       (package
         (inherit emacs)
@@ -53,8 +53,10 @@
                      (origin-patches (package-source emacs)))))))
         (arguments
          (substitute-keyword-arguments (package-arguments emacs)
-           ;((#:make-flags flags ''())
-           ; `(cons* "NATIVE_FULL_AOT=1" ,flags))
+           ((#:make-flags flags ''())
+            (if full-aot
+                `(cons* "NATIVE_FULL_AOT=1" ,flags)
+                flags))
            ((#:configure-flags flags)
             `(cons* "--with-nativecomp" ,flags))
            ((#:phases phases)
@@ -183,10 +185,10 @@
   (emacs-from-git
    (emacs-with-pgtk
     (emacs-with-xwidgets
-     (emacs-with-native-comp emacs-next gcc-10)))
+     (emacs-with-native-comp emacs-next gcc-10 'full-aot)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "132"
+   #:pkg-revision "133"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "ed5dac94de48fb4af1d1d4177a1259cade1bc203"
-   #:checksum "0v7gvgz069pw3r01syjm29rg100p2nh5cq65gn65spqrgljms8mq"))
+   #:git-commit "605f19aae43e6b892969d916b9264447038e7aa9"
+   #:checksum "12ap7fgppr00ir1lvafc4qwz2ca00fry4s0h6s0xvfxy6ys14fqf"))
