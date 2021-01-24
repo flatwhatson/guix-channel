@@ -188,7 +188,7 @@
      (emacs-with-native-comp emacs-next gcc-10 'full-aot)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "133"
+   #:pkg-revision "134"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "605f19aae43e6b892969d916b9264447038e7aa9"
-   #:checksum "12ap7fgppr00ir1lvafc4qwz2ca00fry4s0h6s0xvfxy6ys14fqf"))
+   #:git-commit "148b547ec30bbe949d8d0a213c07167e593851e6"
+   #:checksum "13fsb7r09wqqrwk7xi6hqyz7z8cq4sv0khaajaf8k373s84fhy3w"))
