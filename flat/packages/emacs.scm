@@ -58,7 +58,7 @@
                 `(cons* "NATIVE_FULL_AOT=1" ,flags)
                 flags))
            ((#:configure-flags flags)
-            `(cons* "--with-nativecomp" ,flags))
+            `(cons* "--with-native-compilation" ,flags))
            ((#:phases phases)
             `(modify-phases ,phases
                ;; Add build-time library paths for libgccjit.
@@ -176,7 +176,7 @@
    (emacs-with-native-comp emacs-next gcc-10 'full-aot)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "129"
+   #:pkg-revision "130"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
    #:git-commit "312deba5302a8136fa104b054af54572cc64ea5e"
    #:checksum "0cjsl3kylvggqryy7r9zz1cqpp9np3kl5l09s9j3h4mc2s2s35kl"))
@@ -188,7 +188,7 @@
      (emacs-with-native-comp emacs-next gcc-10 'full-aot)))
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "150"
+   #:pkg-revision "151"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
    #:git-commit "61aaf36935df57450916fce2c5372a2a83d8f4e3"
    #:checksum "06qm185qh76az50cvsxh4kb7lhm9czh4nqk43xl6ld7xm7y9975q"))
