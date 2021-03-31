@@ -14,17 +14,18 @@ See [GccEmacs][gccemacs] for more information.
 
 ### emacs-pgtk-native-comp
 
-Emacs built from an unofficial `pgtk-nativecomp` branch, which combines a pure
-GTK3 rendering engine with the experimental native compilation feature.
+Emacs built from an unofficial `pgtk-nativecomp` branch, which is a merge of
+the `feature/pgtk` and `feature/native-comp` branches on savannah.  PGTK
+provides a "pure" GTK3 rendering engine, bringing support for Wayland and
+improved performance on X.
 
-See [masm11's branch][masm11-pgtk] for more information on pgtk.
+See [masm11's branch][masm11-pgtk] for more information on PGTK.
 
-See [fejfighter's branch][fejfighter-pgtk] for the original pgtk+nativecomp
+See [fejfighter's branch][fejfighter-pgtk] for the original pgtk-nativecomp
 merge.
 
-This package builds from [my pgtk-nativecomp branch][flatwhatson-pgtk], which
-keeps stable commit references by merging instead of rebasing and avoids
-merging master unless the `feature/native-comp` upstream has done so.
+This package builds from [my pgtk-nativecomp branch][flatwhatson-pgtk] which
+is frequently updated from the upstream branches on savannah.
 
 ### libgccjit-10
 
