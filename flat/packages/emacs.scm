@@ -87,21 +87,7 @@
                         "-B" (assoc-ref inputs "libgccjit") "/lib/")
                        (string-append
                         "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
-                   #t))
-               ;; Remove wrappers around .eln files in libexec.
-               (add-after 'restore-emacs-pdmp 'unwrap-eln-files
-                 (lambda* (#:key inputs outputs #:allow-other-keys)
-                   (let* ((output   (assoc-ref outputs "out"))
-                          (libexec  (string-append output "/libexec"))
-                          (eln-list (find-files libexec "\\.eln$")))
-                     (for-each (lambda (wrapper)
-                                 (let ((real (string-append
-                                              (dirname wrapper) "/."
-                                              (basename wrapper) "-real")))
-                                   (delete-file wrapper)
-                                   (rename-file real wrapper)))
-                               eln-list)
-                     #t)))))))
+                   #t))))))
         (native-inputs
          `(("gcc" ,gcc)
            ,@(package-native-inputs emacs)))
