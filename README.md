@@ -7,25 +7,25 @@ to the manual for more information on [Guix Channels][guix-channel].
 
 ### emacs-native-comp
 
-Emacs built from the experimental `feature/native-comp` branch, which adds
-support for native compilation of Elisp.
+Emacs built with support for native compilation of Elisp.
+
+This package once tracked the `feature/native-comp` branch on savannah, but
+now tracks `master` as the feature was merged for inclusion in Emacs 28.
 
 See [GccEmacs][gccemacs] for more information.
 
 ### emacs-pgtk-native-comp
 
-Emacs built from an unofficial `pgtk-nativecomp` branch, which is a merge of
-the `feature/pgtk` and `feature/native-comp` branches on savannah.  PGTK
-provides a "pure" GTK3 rendering engine, bringing support for Wayland and
-improved performance on X.
+Emacs built with support for native compilation of Elisp and a new "pure" GTK3
+rendering engine, bringing support for Wayland and improved performance on X.
+
+This package tracks an unofficial [pgtk-nativecomp][flatwhatson-pgtk] branch,
+which was once a merge of the `feature/pgtk` and `feature/native-comp`
+branches on savannah.  Since native compilation was merged for inclusion in
+Emacs 28, this branch tracks `feature/pgtk` with slightly more frequent merges
+from `master`.
 
 See [masm11's branch][masm11-pgtk] for more information on PGTK.
-
-See [fejfighter's branch][fejfighter-pgtk] for the original pgtk-nativecomp
-merge.
-
-This package builds from [my pgtk-nativecomp branch][flatwhatson-pgtk] which
-is frequently updated from the upstream branches on savannah.
 
 ### libgccjit-10
 
@@ -95,5 +95,4 @@ See [COPYING](COPYING) for details.
 [guix-channel]: https://guix.gnu.org/manual/en/html_node/Channels.html
 [gccemacs]: https://www.emacswiki.org/emacs/GccEmacs
 [masm11-pgtk]: https://github.com/masm11/emacs/tree/pgtk
-[fejfighter-pgtk]: https://github.com/fejfighter/emacs/tree/pgtk-nativecomp
 [flatwhatson-pgtk]: https://github.com/flatwhatson/emacs/tree/pgtk-nativecomp
