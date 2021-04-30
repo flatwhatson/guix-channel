@@ -147,6 +147,8 @@
       (inputs
        `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
          ,@(package-inputs emacs)))
+      (outputs
+       '("out" "debug"))
       (native-search-paths
        (list (search-path-specification
               (variable "EMACSLOADPATH")
