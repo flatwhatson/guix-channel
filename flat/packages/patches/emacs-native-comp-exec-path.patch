@@ -4,13 +4,13 @@ with things like GCC being referenced.
 
 --- a/lisp/loadup.el
 +++ b/lisp/loadup.el
-@@ -516,7 +516,8 @@
+@@ -527,7 +527,8 @@
                          ((equal dump-mode "dump") "emacs")
                          ((equal dump-mode "bootstrap") "emacs")
                          ((equal dump-mode "pbootstrap") "bootstrap-emacs.pdmp")
 -                        (t (error "unrecognized dump mode %s" dump-mode)))))
 +                        (t (error "unrecognized dump mode %s" dump-mode))))
 +          (exec-path nil))
-       (when (and (featurep 'nativecomp)
+       (when (and (featurep 'native-compile)
                   (equal dump-mode "pdump"))
-         ;; Don't enable this before bootstrap is completed the as the
+         ;; Don't enable this before bootstrap is completed, as the
