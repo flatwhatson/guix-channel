@@ -76,9 +76,9 @@
                (add-after 'unpack 'patch-driver-options
                  (lambda* (#:key inputs #:allow-other-keys)
                    (substitute* "lisp/emacs-lisp/comp.el"
-                     (("\\(defcustom comp-native-driver-options nil")
+                     (("\\(defcustom native-comp-driver-options nil")
                       (format
-                       #f "(defcustom comp-native-driver-options '(~s ~s ~s ~s)"
+                       #f "(defcustom native-comp-driver-options '(~s ~s ~s ~s)"
                        (string-append
                         "-B" (assoc-ref inputs "binutils") "/bin/")
                        (string-append
@@ -96,28 +96,6 @@
            ("libgccjit" ,libgccjit)
            ,@(package-inputs emacs)))))))
 
-(define emacs-with-xwidgets
-  (mlambda (emacs)
-    (package
-      (inherit emacs)
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:configure-flags flags)
-          `(cons* "--with-xwidgets" ,flags))))
-      (inputs
-       `(("glib-networking" ,glib-networking)
-         ("webkitgtk" ,webkitgtk)
-         ,@(package-inputs emacs))))))
-
-(define emacs-with-pgtk
-  (mlambda (emacs)
-    (package
-      (inherit emacs)
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:configure-flags flags)
-          `(cons* "--with-pgtk" ,flags)))))))
-
 (define emacs-from-git
   (lambda* (emacs #:key pkg-name pkg-version pkg-revision git-repo git-commit checksum)
     (package
@@ -133,50 +111,25 @@
                (commit git-commit)))
          (sha256 (base32 checksum))
          (file-name (git-file-name pkg-name pkg-version))))
-      (arguments
-       (substitute-keyword-arguments (package-arguments emacs)
-         ((#:phases phases)
-          `(modify-phases ,phases
-             ;; Fix strip-double-wrap referencing the wrong version.
-             (replace 'strip-double-wrap
-               (lambda* (#:key outputs #:allow-other-keys)
-                 (with-directory-excursion (assoc-ref outputs "out")
-                   (copy-file (string-append "bin/emacs-" ,pkg-version)
-                              "bin/emacs")
-                   #t)))))))
-      (inputs
-       `(("gsettings-desktop-schemas" ,gsettings-desktop-schemas)
-         ,@(package-inputs emacs)))
       (outputs
-       '("out" "debug"))
-      (native-search-paths
-       (list (search-path-specification
-              (variable "EMACSLOADPATH")
-              (files
-               (list "share/emacs/site-lisp"
-                     (string-append "share/emacs/" pkg-version "/lisp"))))
-             (search-path-specification
-              (variable "INFOPATH")
-              (files '("share/info"))))))))
+       '("out" "debug")))))
 
 (define-public emacs-native-comp
   (emacs-from-git
    (emacs-with-native-comp emacs-next gcc-10 'full-aot)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "164"
+   #:pkg-revision "165"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "704755a568300985caa9e143f46f17d364e5eda9"
-   #:checksum "12zsnbnxwwl0zicmgqmkxvqjylqcvjxvpjgvx9744l57dvanjh2h"))
+   #:git-commit "25c775b4e964aaa2cbf17997c0479dfc2ecf33e2"
+   #:checksum "17sshgayl372kj6ln47s85mhlk9p295rf05v8dp4mvxzfpa8ws8m"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
-   (emacs-with-pgtk
-    (emacs-with-xwidgets
-     (emacs-with-native-comp emacs-next gcc-10 'full-aot)))
+   (emacs-with-native-comp emacs-next-pgtk gcc-10 'full-aot)
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "186"
+   #:pkg-revision "187"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "5eb27833c498584797822838f00b87e52bad1c22"
-   #:checksum "1a5scj7p320da3jkffjkgzfb7ckpww99zk61mv8jmfwcxv02q29m"))
+   #:git-commit "252f0e969d16a85d74008cb7b6abf21cd88f9cbf"
+   #:checksum "0jbh5480sj8qpi9ip63b4pz9f0rnycw0a7sgdhyrz8d8v2bi8mg1"))
