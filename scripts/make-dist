@@ -6,7 +6,8 @@
              (ice-9 binary-ports)
              (ice-9 textual-ports)
              (rnrs bytevectors)
-             (srfi srfi-1))
+             (srfi srfi-1)
+             (srfi srfi-26))
 
 (define %project-root (dirname (dirname (current-filename))))
 
@@ -41,7 +42,7 @@
 
 (define (build-package pkg)
   (let ((output (run-guix-command "build" pkg)))
-    (car output)))
+    (find (negate (cut string-suffix? "-debug" <>)) output)))
 
 (define (pack-package pkg)
   (let ((output (run-guix-command "pack" pkg
