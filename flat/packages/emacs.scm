@@ -119,17 +119,17 @@
    (emacs-with-native-comp emacs-next gcc-10 'full-aot)
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "176"
+   #:pkg-revision "177"
    #:git-repo "https://git.savannah.gnu.org/git/emacs.git"
-   #:git-commit "7a13ddfda0b52d17d845ad390faa3c16005ef453"
-   #:checksum "118gq020imgvnhykz8chv5l62fa4v1vn2jlrg4y3w2jvn6z7xmvd"))
+   #:git-commit "352baac72fd4ab1050c66cd4b27ab54acc051e50"
+   #:checksum "1fizchp2gr6cryjc4dql2xqdzihgpzh3zngl4jrd33l9f9mvspcc"))
 
 (define-public emacs-pgtk-native-comp
   (emacs-from-git
    (emacs-with-native-comp emacs-next-pgtk gcc-10 'full-aot)
    #:pkg-name "emacs-pgtk-native-comp"
    #:pkg-version "28.0.50"
-   #:pkg-revision "198"
+   #:pkg-revision "199"
    #:git-repo "https://github.com/flatwhatson/emacs.git"
-   #:git-commit "4c79a27fcb92e920701f54b25b7fd28a810978d5"
-   #:checksum "1bna4h66yhb51366r0j5rq0nk6bwlfqdw5libw2jlyl0jiqngxxi"))
+   #:git-commit "63767220b78d0fe7af36199b660c7b5a51cd0351"
+   #:checksum "0jmxnbxl0xvg1n5sqmmdzy89jw6bj92nvg89c1zp4zyb5xdg7bvj"))
