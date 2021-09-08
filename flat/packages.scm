@@ -43,6 +43,6 @@ FILE-NAME found in %PATCH-PATH."
 
 (define %patch-path
   (make-parameter
-   (append
-    (list (string-append %channel-root "/flat/packages/patches"))
+   (cons
+    (string-append %channel-root "/flat/packages/patches")
     (gnu:%patch-path))))
