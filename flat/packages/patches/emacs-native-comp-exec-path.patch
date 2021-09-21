@@ -4,12 +4,12 @@ with things like GCC being referenced.
 
 --- a/lisp/loadup.el
 +++ b/lisp/loadup.el
-@@ -527,7 +527,8 @@
+@@ -526,7 +526,8 @@
                          ((equal dump-mode "dump") "emacs")
                          ((equal dump-mode "bootstrap") "emacs")
                          ((equal dump-mode "pbootstrap") "bootstrap-emacs.pdmp")
--                        (t (error "unrecognized dump mode %s" dump-mode)))))
-+                        (t (error "unrecognized dump mode %s" dump-mode))))
+-                        (t (error "Unrecognized dump mode %s" dump-mode)))))
++                        (t (error "Unrecognized dump mode %s" dump-mode))))
 +          (exec-path nil))
        (when (and (featurep 'native-compile)
                   (equal dump-mode "pdump"))
