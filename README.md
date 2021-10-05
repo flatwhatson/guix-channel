@@ -10,7 +10,7 @@ to the manual for more information on [Guix Channels][guix-channel].
 Emacs built with support for native compilation of Elisp.
 
 This package once tracked the `feature/native-comp` branch on savannah, but
-now tracks `master` as the feature was merged for inclusion in Emacs 28.
+now tracks `emacs-28` as the feature was merged for inclusion in Emacs 28.
 
 See [GccEmacs][gccemacs] for more information.
 
@@ -22,14 +22,13 @@ rendering engine, bringing support for Wayland and improved performance on X.
 This package tracks an unofficial [pgtk-nativecomp][flatwhatson-pgtk] branch,
 which was once a merge of the `feature/pgtk` and `feature/native-comp`
 branches on savannah.  Since native compilation was merged for inclusion in
-Emacs 28, this branch tracks `feature/pgtk` with slightly more frequent merges
-from `master`.
+Emacs 28, this branch is a merge of `feature/pgtk` and `emacs-28`.
 
 See [masm11's branch][masm11-pgtk] for more information on PGTK.
 
-### libgccjit-10
+### libgccjit-11
 
-An updated `libgccjit` package based on `gcc-10`.  The `libgccjit` package in
+An updated `libgccjit` package based on `gcc-11`.  The `libgccjit` package in
 Guix is based on `gcc-9`, which is missing some changes that are important for
 `emacs-native-comp` performance.
 

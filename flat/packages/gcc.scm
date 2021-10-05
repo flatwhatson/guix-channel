@@ -39,8 +39,14 @@
                                                   (srfi srfi-26))
                                        ,@(package-arguments gcc))
          ((#:configure-flags flags)
-          `(append `("--enable-host-shared"
-                     ,(string-append "--enable-languages=jit"))
+          `(append '("--disable-bootstrap"
+                     "--disable-libatomic"
+                     "--disable-libgomp"
+                     "--disable-libquadmath"
+                     "--disable-libssp"
+                     "--enable-host-shared"
+                     "--enable-checking=release"
+                     "--enable-languages=jit")
                    (remove (cut string-match "--enable-languages.*" <>)
                            ,flags)))
          ((#:phases phases)
@@ -50,7 +56,16 @@
                  (for-each delete-file
                            (find-files (string-append (assoc-ref outputs "out") "/bin")
                                        ".*(c\\+\\+|cpp|g\\+\\+|gcov|gcc|gcc-.*)"))
-                 #t)))))))))
+                 #t))))))
+      (inputs
+       (alist-delete "libstdc++"
+                     (package-inputs gcc)))
+      (native-inputs
+       `(("gcc" ,gcc)
+         ,@(package-native-inputs gcc))))))
 
 (define-public libgccjit-10
   (libgccjit-for-gcc gcc-10))
+
+(define-public libgccjit-11
+  (libgccjit-for-gcc gcc-11))
