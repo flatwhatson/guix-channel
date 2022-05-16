@@ -17,6 +17,7 @@
 ;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 (define-module (flat packages emacs)
+  #:use-module (guix gexp)
   #:use-module (guix packages)
   #:use-module (guix memoization)
   #:use-module (guix git-download)
@@ -55,19 +56,19 @@
          (substitute-keyword-arguments (package-arguments emacs)
            ((#:make-flags flags ''())
             (if full-aot
-                `(cons* "NATIVE_FULL_AOT=1" ,flags)
+                #~(cons* "NATIVE_FULL_AOT=1" #$flags)
                 flags))
            ((#:configure-flags flags)
-            `(cons* "--with-native-compilation" ,flags))
+            #~(cons* "--with-native-compilation" #$flags))
            ((#:phases phases)
-            `(modify-phases ,phases
+            #~(modify-phases #$phases
                ;; Add build-time library paths for libgccjit.
                (add-before 'configure 'set-libgccjit-path
                  (lambda* (#:key inputs #:allow-other-keys)
                    (let ((libgccjit-libdir
                           (string-append (assoc-ref inputs "libgccjit")
                                          "/lib/gcc/" %host-type "/"
-                                         ,(package-version libgccjit) "/")))
+                                         #$(package-version libgccjit) "/")))
                      (setenv "LIBRARY_PATH"
                              (string-append libgccjit-libdir ":"
                                             (getenv "LIBRARY_PATH"))))
@@ -89,13 +90,11 @@
                         "-B" (assoc-ref inputs "libgccjit") "/lib/gcc/"))))
                    #t))))))
         (native-inputs
-         `(("gcc" ,gcc)
-           ,@(package-native-inputs emacs)))
+         (modify-inputs (package-native-inputs emacs)
+           (prepend gcc)))
         (inputs
-         `(("glibc" ,glibc)
-           ("libgccjit" ,libgccjit)
-           ("libxcomposite" ,libxcomposite) ;; FIXME belongs upstream
-           ,@(package-inputs emacs)))))))
+         (modify-inputs (package-inputs emacs)
+           (prepend glibc libgccjit libxcomposite)))))))
 
 (define emacs-from-git
   (lambda* (emacs #:key pkg-name pkg-version pkg-revision git-repo git-commit checksum)
