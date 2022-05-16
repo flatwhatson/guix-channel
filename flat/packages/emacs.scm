@@ -122,7 +122,7 @@
    #:pkg-name "emacs-native-comp"
    #:pkg-version "28.1.50"
    #:pkg-revision "200"
-                                        ;#:git-repo "https://git.savannah.gnu.org/git/emacs.git"
+   ;#:git-repo "https://git.savannah.gnu.org/git/emacs.git"
    #:git-repo "https://github.com/emacs-mirror/emacs.git"
    #:git-commit "3b6338c8c351cce721f2f1aa115cadc401179d5c"
    #:checksum "1h7b5l1549mxf0s6knl5jcrji65ld0zph6yq8pfpgizagmkp4mfd"))
