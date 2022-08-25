@@ -69,3 +69,6 @@
 
 (define-public libgccjit-11
   (libgccjit-for-gcc gcc-11))
+
+(define-public libgccjit-12
+  (libgccjit-for-gcc gcc-12))
